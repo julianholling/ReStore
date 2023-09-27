@@ -4,7 +4,6 @@ import { Container, CssBaseline } from "@mui/material";
 import Header from "./Header";
 import Catalog from "../../features/catalog/Catalog";
 
-
 function App() {
 
 const [products, setProducts] = useState<Product[]>([]);
