@@ -10,7 +10,7 @@ export default function ProductDetails() {
     const [product, setProduct] = useState<Product | null>(null);
     const [loading, setLoading] = useState(true);
 
-    {/*  Please note - in the axios's "get" method, we use back ticks and not apostrophes to string concatenate react / javascript */}
+    //  Please note - in the axios's "get" method, we use back ticks and not apostrophes to string concatenate react / javascript 
     useEffect(() => {
         axios
             .get(`http://localhost:5000/api/products/${id}`)
