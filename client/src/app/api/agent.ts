@@ -22,7 +22,7 @@ const TestErrors = {
     get401Error: () => requests.get('buggy/unauthorized'),
     get404Error: () => requests.get('buggy/not-found'),
     get500Error: () => requests.get('buggy/server-error'),
-    getValidatioNError: () => requests.get('buggy/validation-error'),
+    getValidationError: () => requests.get('buggy/validation-error'),
 }
 
 const agent = {
