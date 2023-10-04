@@ -1,7 +1,6 @@
-using System.Reflection.Metadata.Ecma335;
 using API.Data;
+using API.DTOs;
 using API.Entities;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,7 +16,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<Basket>> GetBasket()
+        public async Task<ActionResult<BasketDto>> GetBasket()
         {
             var basket = await RetrieveBasket();
             if (basket is null)
@@ -25,7 +24,22 @@ namespace API.Controllers
                 return NotFound();
             }
 
-            return basket;
+            //  Perhaps we could look at using AutoMapper here?
+            return new BasketDto
+            {
+                Id = basket.Id,
+                BuyerId = basket.BuyerId,
+                Items  = basket.Items.Select(bi => new BasketItemDto 
+                {
+                    ProductId = bi.ProductId,
+                    Name = bi.Product.Name,
+                    Price = bi.Product.Price,
+                    PictureUrl = bi.Product.PictureUrl,
+                    type = bi.Product.Type,
+                    Brand = bi.Product.Brand,
+                    Quantity = bi.Quantity
+                }).ToList()
+            };
         }
 
         [HttpPost]
@@ -89,7 +103,7 @@ namespace API.Controllers
             };
             Response.Cookies.Append("buyerId", buyerId, cookieOptions);
             var basket = new Basket{BuyerId = buyerId};
-            _context.Baskets.Add(basket)
+            _context.Baskets.Add(basket);
 
             return basket;
 
