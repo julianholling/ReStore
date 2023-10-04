@@ -1,6 +1,7 @@
 using API.Data;
 using API.DTOs;
 using API.Entities;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +16,7 @@ namespace API.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet(Name ="GetBasket")]
         public async Task<ActionResult<BasketDto>> GetBasket()
         {
             var basket = await RetrieveBasket();
@@ -25,25 +26,11 @@ namespace API.Controllers
             }
 
             //  Perhaps we could look at using AutoMapper here?
-            return new BasketDto
-            {
-                Id = basket.Id,
-                BuyerId = basket.BuyerId,
-                Items  = basket.Items.Select(bi => new BasketItemDto 
-                {
-                    ProductId = bi.ProductId,
-                    Name = bi.Product.Name,
-                    Price = bi.Product.Price,
-                    PictureUrl = bi.Product.PictureUrl,
-                    type = bi.Product.Type,
-                    Brand = bi.Product.Brand,
-                    Quantity = bi.Quantity
-                }).ToList()
-            };
+            return MapBasketToDto(basket);
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddItemToBasket(int productId, int quantity)
+        public async Task<ActionResult<BasketDto>> AddItemToBasket(int productId, int quantity)
         {
             //  1.  Retrieve basket (create if not existing already)
             var basket = await RetrieveBasket();
@@ -66,7 +53,7 @@ namespace API.Controllers
             var result = await _context.SaveChangesAsync() > 0;
             if(result)            
             {
-                return StatusCode(201);
+                return CreatedAtRoute("GetBasket", MapBasketToDto(basket));
             }
 
             return BadRequest(new ProblemDetails{Title = "Problem saving item to basket"});
@@ -96,7 +83,6 @@ namespace API.Controllers
             return BadRequest(new ProblemDetails{Title = "Problem removing item from the basket"});
         }
 
-
         private async Task<Basket> RetrieveBasket()
         {
             return await
@@ -120,6 +106,25 @@ namespace API.Controllers
 
             return basket;
 
+        }
+
+        private static ActionResult<BasketDto> MapBasketToDto(Basket basket)
+        {
+            return new BasketDto
+            {
+                Id = basket.Id,
+                BuyerId = basket.BuyerId,
+                Items = basket.Items.Select(bi => new BasketItemDto
+                {
+                    ProductId = bi.ProductId,
+                    Name = bi.Product.Name,
+                    Price = bi.Product.Price,
+                    PictureUrl = bi.Product.PictureUrl,
+                    type = bi.Product.Type,
+                    Brand = bi.Product.Brand,
+                    Quantity = bi.Quantity
+                }).ToList()
+            };
         }
     }
 }
