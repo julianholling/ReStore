@@ -24,7 +24,6 @@ function App() {
     setDarkMode(!darkMode);
   }
 
-
   return (
     <>
     <ThemeProvider theme={theme}>
