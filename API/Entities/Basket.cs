@@ -29,6 +29,11 @@ namespace API.Entities
                 return;
             }
 
+            if (quantity > item.Quantity)
+            {
+                quantity = item.Quantity;
+            }
+            
             item.Quantity -= quantity;
             if(item.Quantity == 0)
             {

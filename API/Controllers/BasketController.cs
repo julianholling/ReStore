@@ -72,8 +72,6 @@ namespace API.Controllers
             return BadRequest(new ProblemDetails{Title = "Problem saving item to basket"});
         }
 
-
-
         [HttpDelete]
         public async Task<ActionResult> RemoveBasketItem(int productId, int quantity)
         {
