@@ -1,3 +1,6 @@
+export const INCREMENT_COUNTER = "INCREMENT_COUNTER";
+export const DECREMENT_COUNTER = "DECREMENT_COUNTER";
+
 export interface CounterState {
     data: number;
     title: string;
@@ -8,7 +11,16 @@ const initialState: CounterState = {
     title: 'YARC (yet another redux counter)'
 }
 
-//export default function counterReducer(state = initialState, action: any){
-export default function counterReducer(state = initialState){
-    return state;
+export default function counterReducer(state = initialState, action: any){
+    switch(action.type) 
+    {
+        case "INCREMENT_COUNTER":
+            return { ...state, data: state.data + 1}
+            break;
+        case "DECREMENT_COUNTER":
+            return { ...state, data: state.data - 1}
+            break;
+        default:
+            return state;
+    }
 }
