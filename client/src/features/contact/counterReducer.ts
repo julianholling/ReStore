@@ -1,6 +1,8 @@
+//  Redux Actions !! 
 export const INCREMENT_COUNTER = "INCREMENT_COUNTER";
 export const DECREMENT_COUNTER = "DECREMENT_COUNTER";
 
+//  Redux Action Creator !!!!
 export interface CounterState {
     data: number;
     title: string;
