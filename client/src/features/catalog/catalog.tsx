@@ -16,8 +16,7 @@ export default function Catalog() {
         {
             dispatch(fetchProductsAsync());
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps 
-    }, [productsLoaded]) // <--------- this will be fixed in a later chapter !!!
+    }, [productsLoaded, dispatch])
     
     if(status.includes('pending')) return <LoadingComponent message='Loading Products'/>
 
