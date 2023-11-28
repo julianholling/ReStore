@@ -10,7 +10,7 @@ const {state} = useLocation();
             {state?.error ? (
                 <>
                     <Typography gutterBottom variant="h3" color='secondary'>
-                        {state.title}
+                        {state.error.title}
                     </Typography>
                     <Divider />
                     <Typography variant="body1">
