@@ -1,38 +1,15 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box, Grid, Button } from "@mui/material";
 import { Add, Delete, Remove } from "@mui/icons-material";
-import agent from "../../app/api/agent";
 import { LoadingButton } from "@mui/lab";
-import { useState } from "react";
 import BasketSummary from "./BasketSummary";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
-import { removeItem, setBasket } from "./basketSlice";
+import { addBasketItemAsync, removeBasketItemAsync } from "./basketSlice";
 
 export default function BasketPage(){
 
-   const {basket} = useAppSelector(state => state.basket);
-   const dispatch = useAppDispatch();
-   const [status, setStatus] = useState({
-        loading: false,
-        name: ''
-    });
-
-   function addItemEventHandler(productId : number, name: string) {
-      setStatus({loading: true, name});
-      agent.Basket.addItem(productId)
-        .then(basket => dispatch(setBasket(basket)))
-        .catch(error => console.log(error))
-        .finally(() => setStatus({loading: false, name}));
-   }
-
-   function removeItemEventHandler(productId : number, quantity  = 1, name: string) {
-      setStatus({loading: true, name});
-      agent.Basket.removeItem(productId, quantity)
-        .then(() => dispatch(removeItem({productId, quantity})))
-        .catch(error => console.log(error))
-        .finally(() => setStatus({loading: false, name}));
-
-   }
+    const {basket, status} = useAppSelector(state => state.basket);
+    const dispatch = useAppDispatch();
 
     if(!basket)
     {
@@ -69,15 +46,15 @@ export default function BasketPage(){
                                 <TableCell align="center">
                                     <LoadingButton 
                                         color="error" 
-                                        loading={status.loading && status.name === 'rem' + item.productId } 
-                                        onClick={() => removeItemEventHandler(item.productId, 1, 'rem' + item.productId )}>
+                                        loading={status.includes('pendingRemoveItem' + item.productId)} 
+                                        onClick={() => dispatch(removeBasketItemAsync({productId: item.productId}))}>
                                         <Remove />
                                     </LoadingButton>
                                     {item.quantity}
                                     <LoadingButton 
                                         color="secondary"  
-                                        loading={status.loading && status.name === 'add' + item.productId} 
-                                        onClick={() => addItemEventHandler(item.productId, 'add' + item.productId)}>
+                                        loading={status.includes('pendingAddItem' + item.productId)} 
+                                        onClick={() => dispatch(addBasketItemAsync({productId: item.productId, quantity: item.quantity}))}>
                                         <Add />
                                     </LoadingButton> 
                                     
@@ -86,8 +63,8 @@ export default function BasketPage(){
                                 <TableCell align="right">
                                     <LoadingButton 
                                         color="error" 
-                                        loading={status.loading && status.name === 'del' + item.productId } 
-                                        onClick={() => removeItemEventHandler(item.productId, item.quantity, 'del' + item.productId)}>
+                                        loading={status.includes('pendingRemoveItem' + item.productId)} 
+                                        onClick={() => dispatch(removeBasketItemAsync({productId: item.productId}))}>
                                         <Delete />
                                     </LoadingButton>
                                 </TableCell>
