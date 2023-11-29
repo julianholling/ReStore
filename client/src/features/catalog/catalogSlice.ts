@@ -14,11 +14,30 @@ interface CatalogState {
 
 const productsAdapter = createEntityAdapter<Product>();
 
-export const fetchProductsAsync = createAsyncThunk<Product[]>(
+function getAxiosParameters(productParameters: ProductParameters) {
+    const parameters = new URLSearchParams();
+    parameters.append('pageNumber', productParameters.pageNumber.toString());
+    parameters.append('pageSize', productParameters.pageSize.toString());
+    parameters.append('orderBy', productParameters.orderBy);
+    if(productParameters.searchTerm){
+        parameters.append('searchTerm', productParameters.searchTerm);
+    }
+    if(productParameters.brands){
+        parameters.append('brands', productParameters.brands.toString());
+    }
+    if(productParameters.types){
+        parameters.append('types', productParameters.types.toString());
+    }
+    return parameters;
+
+}
+
+export const fetchProductsAsync = createAsyncThunk<Product[], void, {state: RootState}>(
     'catalog/fetchProductsAsync',
     async (_, thunkAPI) => {
+        const parameters = getAxiosParameters(thunkAPI.getState().catalog.productParameters);
         try {
-            return await agent.Catalog.list();
+            return await agent.Catalog.list(parameters);
         }
         catch(error : any) {
             return thunkAPI.rejectWithValue({error: error.data});
