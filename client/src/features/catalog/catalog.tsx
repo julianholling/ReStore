@@ -3,7 +3,8 @@ import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import ProductList from "./ProductList";
 import { fetchFiltersAsync, fetchProductsAsync, productSelectors} from "./catalogSlice";
 import { useEffect } from "react";
-import { Grid, Paper, TextField, FormControl, RadioGroup, FormControlLabel, Radio, FormGroup, Checkbox, Box, Typography, Pagination } from "@mui/material";
+import { Grid, Paper, FormControl, RadioGroup, FormControlLabel, Radio, FormGroup, Checkbox, Box, Typography, Pagination } from "@mui/material";
+import ProductSearch from "./ProductSearch";
 
 const sortOptions = [
     {value: 'name', label: 'Alphabetical'},
@@ -45,7 +46,7 @@ export default function Catalog() {
             <Grid item xs={3}>
                 
                 <Paper sx={{mb:2}}>
-                    <TextField label='Search products ...' variant='outlined' fullWidth/>
+                    <ProductSearch />
                 </Paper>
                 
                 <Paper sx={{mb:2, p: 2}}>
