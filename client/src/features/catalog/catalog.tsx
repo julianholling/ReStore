@@ -3,9 +3,10 @@ import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import ProductList from "./ProductList";
 import { fetchFiltersAsync, fetchProductsAsync, productSelectors, setProductParameters} from "./catalogSlice";
 import { useEffect } from "react";
-import { Grid, Paper, FormControlLabel, FormGroup, Checkbox, Box, Typography, Pagination } from "@mui/material";
+import { Grid, Paper, Box, Typography, Pagination } from "@mui/material";
 import ProductSearch from "./ProductSearch";
 import RadioButtonGroup from "../../app/components/RadioButtonGroup";
+import CheckboxButtons from "../../app/components/CheckBoxButtons";
 
 const sortOptions = [
     {value: 'name', label: 'Alphabetical'},
@@ -58,21 +59,19 @@ export default function Catalog() {
                 </Paper>
 
                 <Paper sx={{mb:2, p:2}}>
-                    <FormGroup>
-                        {brands.map(brand => (
-                            <FormControlLabel control={<Checkbox />} label={brand} key={brand} />    
-                        ))}
-                        
-                    </FormGroup>
+                    <CheckboxButtons 
+                        items={brands}
+                        checked={productParameters.brands}
+                        onChange={(items: string[]) => dispatch(setProductParameters({brands: items}))}
+                    />
                 </Paper>
 
                 <Paper sx={{mb:2, p:2}}>
-                    <FormGroup>
-                        {types.map(type => (
-                            <FormControlLabel control={<Checkbox />} label={type} key={type} />    
-                        ))}
-                        
-                    </FormGroup>
+                <CheckboxButtons 
+                        items={types}
+                        checked={productParameters.types}
+                        onChange={(items: string[]) => dispatch(setProductParameters({types: items}))}
+                    />
                 </Paper>
 
             </Grid>
