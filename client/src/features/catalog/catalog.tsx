@@ -1,12 +1,13 @@
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import ProductList from "./ProductList";
-import { fetchFiltersAsync, fetchProductsAsync, productSelectors, setProductParameters} from "./catalogSlice";
+import { fetchFiltersAsync, fetchProductsAsync, productSelectors, setProductParameters } from "./catalogSlice";
 import { useEffect } from "react";
-import { Grid, Paper, Box, Typography, Pagination } from "@mui/material";
+import { Grid, Paper } from "@mui/material";
 import ProductSearch from "./ProductSearch";
 import RadioButtonGroup from "../../app/components/RadioButtonGroup";
-import CheckboxButtons from "../../app/components/CheckBoxButtons";
+import CheckboxButtons from "../../app/components/CheckboxButtons";
+import Pager from "../../app/components/Pager";
 
 const sortOptions = [
     {value: 'name', label: 'Alphabetical'},
@@ -17,7 +18,7 @@ const sortOptions = [
 export default function Catalog() {
 
     const products = useAppSelector(productSelectors.selectAll);
-    const {productsLoaded, status, filtersLoaded, brands, types, productParameters} = useAppSelector(state => state.catalog);
+    const { productsLoaded, status, filtersLoaded, brands, types, productParameters, metaData } = useAppSelector(state => state.catalog);
     const dispatch = useAppDispatch();
     
     //  Use two useEffects here to stop a double request call to redux store.
@@ -39,7 +40,7 @@ export default function Catalog() {
 
     }, [dispatch, filtersLoaded])
 
-    if(status.includes('pending')) {
+    if(status.includes('pending') || !metaData) {
         return <LoadingComponent message='Loading Products'/>
     }
 
@@ -67,7 +68,7 @@ export default function Catalog() {
                 </Paper>
 
                 <Paper sx={{mb:2, p:2}}>
-                <CheckboxButtons 
+                    <CheckboxButtons 
                         items={types}
                         checked={productParameters.types}
                         onChange={(items: string[]) => dispatch(setProductParameters({types: items}))}
@@ -82,13 +83,9 @@ export default function Catalog() {
             
             <Grid item xs={3} />
             <Grid item xs={9}>
-                <Box display='flex' justifyContent='space-between' alignItems='center'>
-                    <Typography>
-                        DIsplaying 1-6 of 18 items
-                    </Typography>
-                    <Pagination color='secondary' size='large' count={3} page={1} />
-
-                </Box>
+                <Pager 
+                    metaData={metaData} 
+                    onPageChange={(page: number) => dispatch(setProductParameters({pageNumber:page}))} />
             </Grid>
 
         </Grid>
