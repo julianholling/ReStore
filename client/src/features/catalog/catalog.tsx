@@ -1,10 +1,11 @@
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import ProductList from "./ProductList";
-import { fetchFiltersAsync, fetchProductsAsync, productSelectors} from "./catalogSlice";
+import { fetchFiltersAsync, fetchProductsAsync, productSelectors, setProductParameters} from "./catalogSlice";
 import { useEffect } from "react";
-import { Grid, Paper, FormControl, RadioGroup, FormControlLabel, Radio, FormGroup, Checkbox, Box, Typography, Pagination } from "@mui/material";
+import { Grid, Paper, FormControlLabel, FormGroup, Checkbox, Box, Typography, Pagination } from "@mui/material";
 import ProductSearch from "./ProductSearch";
+import RadioButtonGroup from "../../app/components/RadioButtonGroup";
 
 const sortOptions = [
     {value: 'name', label: 'Alphabetical'},
@@ -15,7 +16,7 @@ const sortOptions = [
 export default function Catalog() {
 
     const products = useAppSelector(productSelectors.selectAll);
-    const {productsLoaded, status, filtersLoaded, brands, types} = useAppSelector(state => state.catalog);
+    const {productsLoaded, status, filtersLoaded, brands, types, productParameters} = useAppSelector(state => state.catalog);
     const dispatch = useAppDispatch();
     
     //  Use two useEffects here to stop a double request call to redux store.
@@ -50,16 +51,10 @@ export default function Catalog() {
                 </Paper>
                 
                 <Paper sx={{mb:2, p: 2}}>
-                    <FormControl>
-                        <RadioGroup>
-                            {
-                                sortOptions.map(({value, label}) => (
-                                    <FormControlLabel value={value} control={<Radio />} label={label} key={value} />
-                                ))
-                            }
-                            
-                        </RadioGroup>
-                    </FormControl>
+                    <RadioButtonGroup 
+                        selectedValue={productParameters.orderBy} 
+                        options={sortOptions} 
+                        onChange={(e) => dispatch(setProductParameters({orderBy: e.target.value}))} />
                 </Paper>
 
                 <Paper sx={{mb:2, p:2}}>
