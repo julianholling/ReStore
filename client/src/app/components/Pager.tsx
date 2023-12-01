@@ -9,12 +9,17 @@ interface Props {
 export default function Pager({metaData, onPageChange} : Props) {
 
     const {currentPage, totalPages, pageSize, totalCount } = metaData;
-
+    let firstItem : number = 0;
+    firstItem = (currentPage-1) * pageSize + 1;
+    if(firstItem > totalCount ){
+        firstItem = totalCount
+    }
+    
     return (
 
         <Box display='flex' justifyContent='space-between' alignItems='center'>
             <Typography>
-                Displaying {(currentPage-1) * pageSize+1} - {currentPage * pageSize > totalCount ? totalCount : (currentPage * pageSize)} of {totalCount} items
+                Displaying {firstItem} - {currentPage * pageSize > totalCount ? totalCount : (currentPage * pageSize)} of {totalCount} items
             </Typography>
             <Pagination 
                 color='secondary' 

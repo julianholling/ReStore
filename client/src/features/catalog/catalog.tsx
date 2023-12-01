@@ -1,7 +1,7 @@
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import ProductList from "./ProductList";
-import { fetchFiltersAsync, fetchProductsAsync, productSelectors, setProductParameters } from "./catalogSlice";
+import { fetchFiltersAsync, fetchProductsAsync, productSelectors, setProductParameters, setPageNumber } from "./catalogSlice";
 import { useEffect } from "react";
 import { Grid, Paper } from "@mui/material";
 import ProductSearch from "./ProductSearch";
@@ -45,7 +45,7 @@ export default function Catalog() {
     }
 
     return (
-        <Grid container spacing={4}>
+        <Grid container columnSpacing={4}>
             <Grid item xs={3}>
                 
                 <Paper sx={{mb:2}}>
@@ -82,10 +82,10 @@ export default function Catalog() {
             </Grid>
             
             <Grid item xs={3} />
-            <Grid item xs={9}>
+            <Grid item xs={9} sx={{mb:2}}>
                 <Pager 
                     metaData={metaData} 
-                    onPageChange={(page: number) => dispatch(setProductParameters({pageNumber:page}))} />
+                    onPageChange={(page: number) => dispatch(setPageNumber({pageNumber:page}))} />
             </Grid>
 
         </Grid>

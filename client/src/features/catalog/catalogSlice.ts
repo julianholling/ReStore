@@ -24,10 +24,10 @@ function getAxiosParameters(productParameters: ProductParameters) {
     if(productParameters.searchTerm){
         parameters.append('searchTerm', productParameters.searchTerm);
     }
-    if(productParameters.brands){
+    if(productParameters.brands.length > 0){
         parameters.append('brands', productParameters.brands.toString());
     }
-    if(productParameters.types){
+    if(productParameters.types.length > 0){
         parameters.append('types', productParameters.types.toString());
     }
     return parameters;
@@ -76,7 +76,9 @@ function initialiseParameters() {
     return {
         pageNumber: 1,
         pageSize: 6,
-        orderBy: 'name'
+        orderBy: 'name',
+        brands: [],
+        types: []
     }
 }
 
@@ -92,9 +94,14 @@ export const catalogSlice = createSlice({
         metaData: null
     }),
     reducers: {
+
         setProductParameters: (state, action) => {
             state.productsLoaded = false;
-            state.productParameters = {...state.productParameters, ...action.payload};
+            state.productParameters = { ...state.productParameters, ...action.payload, pageNumber: 1 };
+        },
+        setPageNumber: (state, action) => {
+            state.productsLoaded = false;
+            state.productParameters = { ...state.productParameters, ...action.payload};
         },
         setMetaData: (state, action) => {
             state.metaData = action.payload;
@@ -104,6 +111,7 @@ export const catalogSlice = createSlice({
         }
     },
     extraReducers: (builder => {
+        
         builder.addCase(fetchProductsAsync.pending, (state) => {
             state.status = 'pendingFetchProducts';
         });
@@ -152,4 +160,4 @@ export const catalogSlice = createSlice({
 })
 
 export const productSelectors = productsAdapter.getSelectors((state: RootState) => state.catalog);
-export const { setProductParameters, resetProductParameters, setMetaData } = catalogSlice.actions;
+export const { setProductParameters, resetProductParameters, setMetaData, setPageNumber } = catalogSlice.actions;
