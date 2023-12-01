@@ -18,7 +18,7 @@ const sortOptions = [
 export default function Catalog() {
 
     const products = useAppSelector(productSelectors.selectAll);
-    const { productsLoaded, status, filtersLoaded, brands, types, productParameters, metaData } = useAppSelector(state => state.catalog);
+    const { productsLoaded, filtersLoaded, brands, types, productParameters, metaData } = useAppSelector(state => state.catalog);
     const dispatch = useAppDispatch();
     
     //  Use two useEffects here to stop a double request call to redux store.
@@ -40,7 +40,7 @@ export default function Catalog() {
 
     }, [dispatch, filtersLoaded])
 
-    if(status.includes('pending') || !metaData) {
+    if(!filtersLoaded) {
         return <LoadingComponent message='Loading Products'/>
     }
 
@@ -83,9 +83,11 @@ export default function Catalog() {
             
             <Grid item xs={3} />
             <Grid item xs={9} sx={{mb:2}}>
-                <Pager 
-                    metaData={metaData} 
-                    onPageChange={(page: number) => dispatch(setPageNumber({pageNumber:page}))} />
+                {metaData && 
+                    <Pager 
+                        metaData={metaData} 
+                        onPageChange={(page: number) => dispatch(setPageNumber({pageNumber:page}))} /> 
+                }
             </Grid>
 
         </Grid>
