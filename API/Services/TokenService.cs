@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Text;
 using API.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.IdentityModel.Tokens;
 
 namespace API.Services
@@ -30,7 +29,7 @@ namespace API.Services
             var roles = await _userManager.GetRolesAsync(user);
             foreach (var role in roles)
             {
-                claims.Add(new Claim( ClaimTypes.Role, role))
+                claims.Add(new Claim( ClaimTypes.Role, role));
             }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWTSettings:TokenKey"]));
@@ -41,7 +40,7 @@ namespace API.Services
                 audience: null,
                 claims: claims,
                 expires: DateTime.Now.AddDays(7),
-                signingCredentials: credentials;
+                signingCredentials: credentials
             );
 
             return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
