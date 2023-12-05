@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -8,15 +7,24 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import agent from '../../app/api/agent';
 
 export default function Login() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+    const [values, setValues] = useState({
+        username: '',
+        password: ''
+    })
+
+  const submitLoginEventHandler = (event: any) => {
+    event.preventdefault();
+    agent.Account.login(values);
+  };
+
+  const inputChangeEventHandler = (event: any) => {
+    const {name, value} = event.target;
+    setValues({...values, [name]: value});
   };
 
   return (
@@ -33,26 +41,26 @@ export default function Login() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box component="form" onSubmit={submitLoginEventHandler} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
-              required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              label="Username"
+              name="username"
+              autoComplete="username"
               autoFocus
+              onChange = {inputChangeEventHandler} 
+              value = {values.username}
             />
             <TextField
               margin="normal"
-              required
               fullWidth
               name="password"
               label="Password"
               type="password"
-              id="password"
               autoComplete="current-password"
+              onChange = {inputChangeEventHandler} 
+              value = {values.password}
             />
             <Button
               type="submit"
