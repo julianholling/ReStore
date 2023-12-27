@@ -18,7 +18,7 @@ export default function Login() {
     })
 
   const submitLoginEventHandler = (event: any) => {
-    event.preventdefault();
+    event.preventDefault();
     agent.Account.login(values);
   };
 
