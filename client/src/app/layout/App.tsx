@@ -9,6 +9,7 @@ import agent from "../api/agent";
 import LoadingComponent from "./LoadingComponent";
 import { useAppDispatch } from "../store/configureStore";
 import { setBasket } from "../../features/basket/basketSlice";
+import { fetchCurrentUser } from "../../features/account/accountSlice";
 
 function App() {
 
@@ -16,7 +17,10 @@ function App() {
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
+    
     const buyerId = getCookie('buyerId');
+    dispatch(fetchCurrentUser());
+
     if(buyerId){
       agent.Basket.get()
         .then(basket => dispatch(setBasket(basket)))
