@@ -48,12 +48,11 @@ namespace API.Controllers
                 await _context.SaveChangesAsync();  
             }
 
-
             return new UserDto
             {
                 Email = user.Email,
                 Token = await _tokenService.GenerateToken(user),
-                Basket = anonBasket is not null ? anonBasket.MapBasketToDto() : userBasket.MapBasketToDto()    
+                Basket = anonBasket is not null ? anonBasket.MapBasketToDto() : userBasket?.MapBasketToDto()
             };
         }
 
@@ -84,12 +83,14 @@ namespace API.Controllers
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
 
-            var user =await _userManager.FindByNameAsync(User.Identity.Name);
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var userBasket = await RetrieveBasket(User.Identity.Name);
 
             return new UserDto
             {
                 Email = user.Email,
-                Token = await _tokenService.GenerateToken(user)  
+                Token = await _tokenService.GenerateToken(user),
+                Basket = userBasket?.MapBasketToDto()
             };
 
         }
