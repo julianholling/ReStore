@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
+using SQLitePCL;
 
 namespace API.Controllers
 {
@@ -92,6 +94,21 @@ namespace API.Controllers
                 Token = await _tokenService.GenerateToken(user),
                 Basket = userBasket?.MapBasketToDto()
             };
+
+        }
+
+        [Authorize]
+        [HttpGet("savedAddress")]
+        public async Task<ActionResult<UserAddress>> GetSavedAddress()
+        {
+            var address = await 
+                _userManager
+                    .Users
+                    .Where(x => x.UserName == User.Identity.Name)
+                    .Select(u => u.Address)
+                    .FirstOrDefaultAsync();
+
+            return address;
 
         }
 

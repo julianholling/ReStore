@@ -20,7 +20,11 @@ namespace API.Data
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<User>().HasOne(u => u.Address).WithOne().HasForeignKey<UserAddress>(u => u.Id).OnDelete(DeleteBehavior.Cascade);
+            builder
+                .Entity<User>()
+                .HasOne(u => u.Address)
+                .WithOne().HasForeignKey<UserAddress>(u => u.Id)
+                .OnDelete(DeleteBehavior.Cascade);
                 
             builder.Entity<Role>().HasData(
                 new Role{Id = 1, Name="Member", NormalizedName = "MEMBER"},

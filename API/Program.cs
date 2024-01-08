@@ -18,7 +18,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(configuration => 
 {
-    var jwtSecuritySecheme = new OpenApiSecurityScheme{
+    var jwtSecurityScheme = new OpenApiSecurityScheme{
         BearerFormat = "JWT",
         Name = "Authorization",
         In = ParameterLocation.Header,
@@ -32,11 +32,11 @@ builder.Services.AddSwaggerGen(configuration =>
         }
     };
 
-    configuration.AddSecurityDefinition(jwtSecuritySecheme.Reference.Id, jwtSecuritySecheme);
+    configuration.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
     configuration.AddSecurityRequirement(new OpenApiSecurityRequirement 
     {
         {
-            jwtSecuritySecheme, Array.Empty<string>()
+            jwtSecurityScheme, Array.Empty<string>()
         }
     });
     
