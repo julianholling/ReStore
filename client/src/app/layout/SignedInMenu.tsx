@@ -3,6 +3,7 @@ import React from "react";
 import { useAppDispatch, useAppSelector } from "../store/configureStore";
 import { signOut } from "../../features/account/accountSlice";
 import { clearBasket } from "../../features/basket/basketSlice";
+import { Link } from "react-router-dom";
 
 export default function SignedInMenu() {
 
@@ -34,7 +35,7 @@ export default function SignedInMenu() {
         onClose={onCloseEventhandler}
       >
         <MenuItem onClick={onCloseEventhandler}>Profile</MenuItem>
-        <MenuItem onClick={onCloseEventhandler}>My orders</MenuItem>
+        <MenuItem component={Link} to='/orders'>My orders</MenuItem>
         <MenuItem onClick={() => {
           dispatch(signOut());
           dispatch(clearBasket());
