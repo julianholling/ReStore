@@ -1,11 +1,9 @@
-﻿using System.Runtime.CompilerServices;
-using API.Data;
+﻿using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Entities.OrderAggregation;
 using API.Extensions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -87,7 +85,8 @@ namespace API.Controllers
                 BuyerId = User.Identity.Name,
                 ShippingAddress = orderDto.ShippingAddress,
                 SubTotal = subTotal,
-                DeliveryFee = deliveryFee
+                DeliveryFee = deliveryFee, 
+                PaymentIntentId = basket.PaymentIntentId,
             };
 
             _context.Orders.Add(order);
