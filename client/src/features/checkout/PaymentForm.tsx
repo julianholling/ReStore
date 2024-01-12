@@ -4,24 +4,15 @@ import AppTextInput from "../../app/components/AppTextInput";
 import { CardCvcElement, CardExpiryElement, CardNumberElement } from "@stripe/react-stripe-js";
 import { StripeInput } from "./StripeInput";
 import { StripeElementType } from "@stripe/stripe-js";
-import { useState } from "react";
 
-export default function PaymentForm() {
+interface Props {
+  cardState: { elementError: { [key in StripeElementType]?: string } };
+  onCardInputChange: (event: any) => void;
+}
+
+export default function PaymentForm({ cardState, onCardInputChange }: Props) {
 
   const { control } = useFormContext();
-  const [ cardState, setCardState ] = useState<{elementError: {[key in StripeElementType]?: string}}>({elementError: {}});
-  const [ cardComplete, setCardComplete] = useState<any>({cardNumber: false, cardExpiry: false, cardCvc: false});
-
-  function onCardInputChange(event: any) {
-    setCardState({
-      ...cardState, 
-      elementError: {
-        ...cardState.elementError,
-        [event.elementType]: event.error?.message
-      } 
-    });
-    setCardComplete({...cardComplete, [event.elementType]: event.complete});
-  }
 
   return (
     <>
@@ -30,7 +21,7 @@ export default function PaymentForm() {
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
-          <AppTextInput name="nameOnCard" label="Name on card" control={control}/>
+          <AppTextInput name="nameOnCard" label="Name on card" control={control} />
           <TextField
             id="cardName"
             label="Name on card"
@@ -49,7 +40,7 @@ export default function PaymentForm() {
             fullWidth
             autoComplete="cc-number"
             variant="outlined"
-            InputLabelProps={{shrink:true}}
+            InputLabelProps={{ shrink: true }}
             InputProps={{
               inputComponent: StripeInput,
               inputProps: {
@@ -68,7 +59,7 @@ export default function PaymentForm() {
             fullWidth
             autoComplete="cc-exp"
             variant="outlined"
-            InputLabelProps={{shrink:true}}
+            InputLabelProps={{ shrink: true }}
             InputProps={{
               inputComponent: StripeInput,
               inputProps: {
@@ -87,7 +78,7 @@ export default function PaymentForm() {
             fullWidth
             autoComplete="cc-csc"
             variant="outlined"
-            InputLabelProps={{shrink:true}}
+            InputLabelProps={{ shrink: true }}
             InputProps={{
               inputComponent: StripeInput,
               inputProps: {
