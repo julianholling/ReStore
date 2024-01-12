@@ -1,15 +1,16 @@
 import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Button } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useState } from "react";
 import agent from "../../app/api/agent";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { Order } from "../../app/models/order";
 import { formatCurrency } from "../../app/util/util";
+import OrderDetail from './OrderDetail';
 
 export default function Orders() {
-
-    //  Could convert to an orderslice ... suggested the best way to do this.  THis it the quick and dirty way of doing this.
     const [orders, setOrders] = useState<Order[] | null>(null);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [selectedOrderNumber, setSelectedOrderNumber] = useState(0);
 
     useEffect(() => {
         setLoading(true);
@@ -19,9 +20,14 @@ export default function Orders() {
             .finally(() => setLoading(false))
     }, []);
 
-    if(loading) {
-        return <LoadingComponent message='Loading Orders ...' />
-    }
+    if (loading) return <LoadingComponent message="Loading orders..." />
+
+    if (selectedOrderNumber > 0 && orders) return (
+        <OrderDetail
+            order={orders.find(o => o.id === selectedOrderNumber)!}
+            setSelectedOrder={setSelectedOrderNumber}
+        />
+    )
 
     return (
         <TableContainer component={Paper}>
@@ -47,13 +53,15 @@ export default function Orders() {
                             <TableCell align="right">{formatCurrency(order.total)}</TableCell>
                             <TableCell align="right">{order.orderDate.split('T')[0]}</TableCell>
                             <TableCell align="right">{order.orderStatus}</TableCell>
-                            <TableCell align="right"><Button>View</Button></TableCell>
+                            <TableCell align="right">
+                                <Button onClick={() => setSelectedOrderNumber(order.id)}>
+                                    View
+                                </Button>
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
         </TableContainer>
     )
-
 }
-
