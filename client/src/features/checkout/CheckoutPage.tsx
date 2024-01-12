@@ -16,11 +16,11 @@ const steps = ['Shipping address', 'Review your order', 'Payment details'];
 function getStepContent(step: number) {
     switch (step) {
         case 0:
-            return <AddressForm/>;
+            return <AddressForm />;
         case 1:
-            return <Review/>;
+            return <Review />;
         case 2:
-            return <PaymentForm/>;
+            return <PaymentForm />;
         default:
             throw new Error('Unknown step');
     }
