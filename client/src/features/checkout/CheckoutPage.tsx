@@ -97,17 +97,16 @@ export default function CheckoutPage() {
                 setOrderNumber(orderNumber);
                 setActiveStep(activeStep + 1);
                 dispatch(clearBasket());
-                setActiveStep(activeStep + 1);
             } else {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-                setPaymentMessage(paymentResult.error?.message!);
+                setPaymentMessage(paymentResult.error?.message || 'Payment failed');
                 setPaymentSucceeded(false);
+                setActiveStep(activeStep + 1)
             } 
         }
         catch(error)
         {
             console.log(error);
-            // setLoading(false);
         }
         finally {
             setLoading(false);
