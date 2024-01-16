@@ -9,6 +9,10 @@ primary_region = "lhr"
 [build]
   image = "platinumsoft/restore:latest"
 
+[env]
+  ASPNETCORE_URLS="http://+:8080"
+  StripeSettings__PublishableKey="pk_test_51OXlUdCEVVNDFtH1DiqKINEkEpmyATOKaPegLZe2VEcfKx7FRRE1tAOwVbBEW848kjvMKEBfLhWk5rRUbwgEm0ub00UV2EWHoB"
+
 [http_service]
   internal_port = 8080
   force_https = true
