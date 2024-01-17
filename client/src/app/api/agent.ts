@@ -56,6 +56,9 @@ axios.interceptors.response.use(async response => {
             case 401:
                 toast.error(data.title);
                 break;
+            case 403:
+                toast.error('You are not authorized to use this function!');
+                break;
             case 500:
                 router.navigate('/server-error', {state: {error:data}});       //  This is OK even though react says its a private method
                 break;
