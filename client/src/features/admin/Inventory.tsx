@@ -5,17 +5,40 @@ import useProducts from "../../app/hooks/useProducts";
 import { useAppDispatch } from "../../app/store/configureStore";
 import { setPageNumber } from "../catalog/catalogSlice";
 import Pager from "../../app/components/Pager";
+import { useState } from "react";
+import ProductForm from "./ProductForm";
+import { Product } from "../../app/models/product";
 
 export default function Inventory() {
 
     const { products, metaData } = useProducts();   //  Call our user defined Hook to retrieve the products.
     const dispatch = useAppDispatch();
 
+    const [editMode, setEditMode] = useState(false);
+    const [ selectedProduct, setSelectedProduct ] = useState<Product | undefined>(undefined);
+
+    function selectedProductEventHandler(product: Product){
+        setSelectedProduct(product);
+        setEditMode(true);
+    }
+
+    function cancelEditEventHandler() {
+        if(selectedProduct) {
+            setSelectedProduct(undefined);
+        }
+        setEditMode(false);
+    }
+
+    if(editMode)
+    {
+        return <ProductForm product={selectedProduct} cancelEdit={cancelEditEventHandler} />
+    }
+
     return (
         <>
             <Box display='flex' justifyContent='space-between'>
                 <Typography sx={{ p: 2 }} variant='h4'>Inventory</Typography>
-                <Button sx={{ m: 2 }} size='large' variant='contained'>Create</Button>
+                <Button onClick={() => setEditMode(true)} sx={{ m: 2 }} size='large' variant='contained'>Create</Button>
             </Box>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -50,7 +73,7 @@ export default function Inventory() {
                                 <TableCell align="center">{product.brand}</TableCell>
                                 <TableCell align="center">{product.quantityInStock}</TableCell>
                                 <TableCell align="right">
-                                    <Button startIcon={<Edit />} />
+                                    <Button onClick={() => selectedProductEventHandler(product)} startIcon={<Edit />} />
                                     <Button startIcon={<Delete />} color='error' />
                                 </TableCell>
                             </TableRow>
