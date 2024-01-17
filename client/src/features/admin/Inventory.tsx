@@ -3,11 +3,13 @@ import { Edit, Delete } from "@mui/icons-material";
 import { formatCurrency } from "../../app/util/util";
 import useProducts from "../../app/hooks/useProducts";
 import { useAppDispatch } from "../../app/store/configureStore";
-import { setPageNumber } from "../catalog/catalogSlice";
+import { removeProduct, setPageNumber } from "../catalog/catalogSlice";
 import Pager from "../../app/components/Pager";
 import { useState } from "react";
 import ProductForm from "./ProductForm";
 import { Product } from "../../app/models/product";
+import agent from "../../app/api/agent";
+import { LoadingButton } from "@mui/lab";
 
 export default function Inventory() {
 
@@ -16,10 +18,22 @@ export default function Inventory() {
 
     const [editMode, setEditMode] = useState(false);
     const [ selectedProduct, setSelectedProduct ] = useState<Product | undefined>(undefined);
-
-    function selectedProductEventHandler(product: Product){
+    const [ loading, setLoading ] = useState(false);
+    const [ target, setTarget ] = useState(0)
+ 
+    function selectedProductEventHandler(product: Product) {
         setSelectedProduct(product);
         setEditMode(true);
+    }
+
+    function deleteProductEventHandler(id: number) {
+        setLoading(true);
+        setTarget(id);
+        agent.Admin.deleteProduct(id)
+            .then(() => dispatch(removeProduct(id)))
+            .catch(error => console.log(error))
+            .finally(() => setLoading(false));
+        
     }
 
     function cancelEditEventHandler() {
@@ -74,7 +88,11 @@ export default function Inventory() {
                                 <TableCell align="center">{product.quantityInStock}</TableCell>
                                 <TableCell align="right">
                                     <Button onClick={() => selectedProductEventHandler(product)} startIcon={<Edit />} />
-                                    <Button startIcon={<Delete />} color='error' />
+                                    <LoadingButton 
+                                        loading={loading && target === product.id} 
+                                        onClick={() => deleteProductEventHandler(product.id)}
+                                        startIcon={<Delete />} 
+                                        color='error' />
                                 </TableCell>
                             </TableRow>
                         ))}
