@@ -105,6 +105,29 @@ namespace API.Controllers
             return BadRequest(new ProblemDetails{Title = "Error updating product"});
 
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteProduct(int id)
+        {
+            var product = await _context.Products.FindAsync(id);
+
+            if(product is null)
+            {
+                return NotFound();
+            }
+
+            _context.Products.Remove(product);
+
+            var result = await _context.SaveChangesAsync() > 0;
+
+            if(result)
+            {
+                return Ok();
+            }
+
+            return BadRequest(new ProblemDetails {Title = "Error deleting product"});
+        }
     
     }
 }
