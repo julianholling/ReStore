@@ -14,8 +14,9 @@ interface Props {
 
 export default function ProductForm({ product, cancelEdit }: Props) {
 
-    const { control, reset, handleSubmit } = useForm();
+    const { control, reset, handleSubmit, watch } = useForm();
     const { brands, types } = useProducts();
+    const watchFile = watch('file', null);      //  Watch the field 'product.file' and give it an initial value of null
 
     useEffect(() => {
         if (product) {
@@ -56,15 +57,28 @@ export default function ProductForm({ product, cancelEdit }: Props) {
                         <AppTextInput control={control} multiline={true} rows={4} name='description' label='Description' />
                     </Grid>
                     <Grid item xs={12}>
-                        <AppDropzone control={control} name='file' />
+                        <Box display='flex' justifyContent='space-between' alignItems='center'>
+                            <AppDropzone control={control} name='file' />
+                            {
+                                watchFile 
+                                ?
+                                (
+                                    <img src={watchFile.preview} alt="preview" style={{maxHeight: 200}} />
+                                )
+                                :
+                                (
+                                    <img src={product?.pictureUrl} alt={product?.name} style={{ maxHeight: 200 }} />
+                                )
+                            }
+                        </Box>
                     </Grid>
                 </Grid>
 
                 <Box display='flex' justifyContent='space-between' sx={{ mt: 3 }}>
                     <Button onClick={cancelEdit} variant='contained' color='inherit'>Cancel</Button>
-                    <Button  type='submit' variant='contained' color='success'>Submit</Button>
+                    <Button type='submit' variant='contained' color='success'>Submit</Button>
                 </Box>
-                
+
             </form>
         </Box>
     )
