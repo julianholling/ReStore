@@ -5,20 +5,20 @@ import { useAppSelector } from "../store/configureStore";
 import SignedInMenu from "./SignedInMenu";
 
 const appBarLinksLeft = [
-    {title: 'catalog', path: '/catalog' },
-    {title: 'about', path: '/about' },
-    {title: 'contact', path: '/contact' },
+    { title: 'catalog', path: '/catalog' },
+    { title: 'about', path: '/about' },
+    { title: 'contact', path: '/contact' },
 ]
 
 const appBarLinksRight = [
-    {title: 'login', path: '/login' },
-    {title: 'register', path: '/register' },
+    { title: 'login', path: '/login' },
+    { title: 'register', path: '/register' },
 ]
 
 const navStyles = {
     color: 'inherit',
-    textDecoration: 'none', 
-    typography: 'h6',    
+    textDecoration: 'none',
+    typography: 'h6',
     '&:hover': {
         color: 'grey.500'
     },
@@ -27,77 +27,86 @@ const navStyles = {
     }
 }
 
-interface Props{
+interface Props {
     darkMode: boolean;
     themeChangeEventHandler: () => void
 }
 
-export default function Header({darkMode, themeChangeEventHandler}: Props) {
+export default function Header({ darkMode, themeChangeEventHandler }: Props) {
 
-    const {basket} = useAppSelector(state => state.basket);
-    const {user} = useAppSelector(state => state.account);
+    const { basket } = useAppSelector(state => state.basket);
+    const { user } = useAppSelector(state => state.account);
     const itemCount = basket?.items.reduce((sum, item) => sum + item.quantity, 0);
 
-    return(
+    return (
         <AppBar position='static'>
-            <Toolbar sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+            <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
 
                 <Box display='flex' alignItems='center'>
-                    <Typography 
-                        variant="h6" 
-                        component={NavLink} 
+                    <Typography
+                        variant="h6"
+                        component={NavLink}
                         to='/'
-                        sx={navStyles}    
+                        sx={navStyles}
                     >
                         REACT STORE
                     </Typography>
-                    
+
                     <Switch checked={darkMode} onChange={themeChangeEventHandler}></Switch>
                 </Box>
-                
-                <List sx={{display: 'flex'}}>
-                  {appBarLinksLeft.map(({title, path}) => (
-                  <ListItem 
-                    component={NavLink} 
-                    to={path} 
-                    key={path} 
-                    sx={navStyles}>
-                        {title.toUpperCase()}
-                  </ListItem>))}  
+
+                <List sx={{ display: 'flex' }}>
+                    {appBarLinksLeft.map(({ title, path }) => (
+                        <ListItem
+                            component={NavLink}
+                            to={path}
+                            key={path}
+                            sx={navStyles}>
+                            {title.toUpperCase()}
+                        </ListItem>))}
+                    {
+                        user &&
+                        <ListItem
+                            component={NavLink}
+                            to={'/inventory'}
+                            sx={navStyles}>
+                            INVENTORY
+                        </ListItem>
+                    }
                 </List>
 
                 <Box display='flex' alignItems='center'>
-                    <IconButton 
-                        component={Link} 
-                        to='/basket' 
-                        size='large' 
-                        edge='start' 
-                        color='inherit' 
-                        sx={{mr: 2}}>
-                            <Badge badgeContent={itemCount} color='secondary'>
-                                <ShoppingCart />
-                            </Badge>
+                    <IconButton
+                        component={Link}
+                        to='/basket'
+                        size='large'
+                        edge='start'
+                        color='inherit'
+                        sx={{ mr: 2 }}>
+                        <Badge badgeContent={itemCount} color='secondary'>
+                            <ShoppingCart />
+                        </Badge>
                     </IconButton>
                     {
                         //  If we have a user, show the signed in menu otherwise show the list of default links
-                        user 
-                    
-                            ? 
+                        user
+
+                            ?
                             (
                                 <SignedInMenu />
-                            ) 
-                            : 
+                            )
+                            :
                             (
-                                <List sx={{display: 'flex'}}>
-                                    {appBarLinksRight.map(({title, path}) => (
-                                    <ListItem 
-                                        component={NavLink} 
-                                        to={path} 
-                                        key={path} 
-                                        sx={navStyles}
-                                    >
-                                        {title.toUpperCase()}
-                                    </ListItem>))}  
+                                <List sx={{ display: 'flex' }}>
+                                    {appBarLinksRight.map(({ title, path }) => (
+                                        <ListItem
+                                            component={NavLink}
+                                            to={path}
+                                            key={path}
+                                            sx={navStyles}
+                                        >
+                                            {title.toUpperCase()}
+                                        </ListItem>))}
                                 </List>
                             )
                     }
