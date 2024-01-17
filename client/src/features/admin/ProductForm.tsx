@@ -39,13 +39,13 @@ export default function ProductForm({product, cancelEdit }: Props) {
                     <AppSelectList control={control} items={types} name='type' label='Type' />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <AppTextInput control={control} name='price' label='Price' />
+                    <AppTextInput control={control} type='number' name='price' label='Price' />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <AppTextInput control={control} name='quantityInStock' label='Quantity in Stock' />
+                    <AppTextInput control={control} type='number' name='quantityInStock' label='Quantity in Stock' />
                 </Grid>
                 <Grid item xs={12}>
-                    <AppTextInput control={control} name='description' label='Description' />
+                    <AppTextInput control={control}  multiline={true} rows={4} name='description' label='Description' />
                 </Grid>
                 <Grid item xs={12}>
                     <AppTextInput control={control} name='pictureUrl' label='Image' />
